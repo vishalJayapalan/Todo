@@ -1,0 +1,15 @@
+body{
+    background: rgb(212, 203, 203);
+}
+#navBar{
+    background-color:darkgray;
+}
+#mainBody{
+    margin-top: 20px;
+}
+#select{
+    float:right
+}
+#deleteList{
+    float: right
+}
