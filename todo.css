@@ -7,9 +7,26 @@ body{
 #mainBody{
     margin-top: 20px;
 }
-#select{
+button{
+    background-color:#0505059f;
+    color:white;
+}
+
+#deleteList{
+    display:none;
+    float: right;
+    /* margin-top: 90%; */
+}
+#selectListButton{
+    display:none;
     float:right
 }
-#deleteList{
-    float: right
+#renameListButton{
+    display:none
+}
+p{
+    background-color:grey ;
+    text-align:center;
+    width:40%;
+    margin-left:30%
 }
