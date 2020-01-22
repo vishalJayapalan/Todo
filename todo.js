@@ -6,69 +6,44 @@ const selectListButton = document.querySelector("#selectListButton")
 // const select = document.querySelector("p")
 
 let deleteElement;
-
+// localStorage.clear()
 newListButton.addEventListener("click", listCreator)
 deleteListButton.addEventListener("click", listDelete)
 
-// let list =[]
-// localStorage.setItem("todo", JSON.stringify(list))
 let list = JSON.parse(localStorage.getItem('todo')) || []
-
-let count = list.length ? (Number(list[list.length - 1].id)) : 0
+let count = list.length ? (Number(list[list.length - 1])) : 0
 
 if (list.length) listFromLocalStorage(list)
 
-
 function listFromLocalStorage(list) {
   for (let i of list) {
+    let cnt = JSON.parse(localStorage.getItem(`${i}`))
     const res = document.createElement("p")
-    res.id = i.id
-    res.textContent = i.name
+    res.id = i
+    res.textContent = cnt.name
     mainbody.appendChild(res)
   }
 }
-
-// function elt(name, attrs, ...children) {
-//     let dom = document.createElement(name);
-//     for (let attr of Object.keys(attrs)) {
-//       dom.setAttribute(attr, attrs[attr]);
-//     }
-//     for (let child of children) {
-//         if (typeof child != "string") dom.appendChild(child);
-//         else dom.appendChild(document.createTextNode(child));
-//       }
-//     return dom;
-//   }
 
 function listCreator(event) {
   const listName = prompt("Enter List name")
   if (listName) {
     const res = document.createElement("p")
-    // let check = document.createElement("input")
-    // check.type = "checkbox"
-    // res.appendChild(check)
     count++
     res.id = count
     res.textContent = listName
     mainbody.appendChild(res)
-    list.push({ id: res.id, name: listName })
-    localStorage.setItem("todo", JSON.stringify(list))
+    list.push(res.id)
+    localStorage.setItem(`${res.id}`, JSON.stringify({ id: res.id, name: listName }))
+    localStorage.setItem('todo', JSON.stringify(list))
     const selectP = document.querySelectorAll("p")
     for (let i of Array.from(selectP)) {
       i.addEventListener("dblclick", renameList)
       i.addEventListener("click", deleteOnClick)
     }
   }
+  console.log(list)
 }
-// if(list)
-// window.addEventListener("beforeunload",storeLocal)
-
-// function storeLocal() {
-//   localStorage.setItem("todo", JSON.stringify(list))
-// }
-
-
-
 
 function deleteOnClick(event) {
   deleteListButton.style.display = "block";
@@ -76,18 +51,38 @@ function deleteOnClick(event) {
 }
 
 function renameList(event) {
-
-  console.log(event.target.id)
+  // console.log(document.getElementById('1'))
+  let id = event.target.id
+  let renameName = document.getElementById(`${id}`)
+  // console.log(renameName)
+  let lName = prompt("Enter the List Name")
+  if(lName) {
+    renameName.textContent = lName
+    console.log(renameName)
+    localStorage.setItem(`${id}`,JSON.stringify({id,name:lName}))
+  }
+  // document.getElementById(`${event.target.id}`).parentNode.replaceChild((document.createElement('input').setAttribute("type", "text")), document.getElementById(`${event.target.id}`))
 }
 
 function listDelete() {
-  console.log(deleteElement)
   let element = document.getElementById(deleteElement.id)
   element.parentNode.removeChild(element)
-  // deleteElement='';
-  console.log(typeof list)
-  list.splice(deleteElement.id - 1 ,1)
-  console.log(list)
-  console.log(typeof list)
-  localStorage.setItem("todo", JSON.stringify(list))
+  list = list.filter(a => a != deleteElement.id)
+  localStorage.removeItem(`${deleteElement.id}`)
+  localStorage.setItem('todo', JSON.stringify(list))
+  count = list.length ? count : 0
 }
+const selectP = document.querySelectorAll("p")
+for (let i of Array.from(selectP)) {
+  // i.addEventListener("mousedown",event=>{
+  //   if(event.button == 0){
+  //     deleteOnClick()
+  //   }
+  //   else if(event.button == 2){
+  //     event.preventDefault()
+  //     renameList()
+  //   }
+  // })
+  i.addEventListener("dblclick", renameList)
+  i.addEventListener("click", deleteOnClick)
+} 
