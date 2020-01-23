@@ -4,16 +4,16 @@ body{
 #navBar{
     background-color:darkgray;
 }
-#mainBody{
+#listBody{
     margin-top: 20px;
 }
-button{
+/* button{
     background-color:#0505059f;
     color:white;
-}
+} */
 
 #deleteList{
-    display:none;
+    /* display:none; */
     float: right;
     /* margin-top: 90%; */
 }
@@ -32,4 +32,11 @@ p{
 }
 .change{
     text-align:center
+}
+#todoBody{
+    display:none
+}
+input{
+    width: 40%;
+    margin-left: 30%;
 }
