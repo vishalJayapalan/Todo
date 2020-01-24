@@ -5,19 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>ToDo App</title>
+    <script src="https://kit.fontawesome.com/105ecd73c7.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="todo.css" />
   </head>
   <body>
+    <div id = "listPage">
+      <nav>
+        <div id="navBarList">
+          <button id="newListButton">New List</button>
+          <button id="deleteList" disabled>Delete</button>
+          <button id="selectListButton">Select</button>
+          <button id="renameListButton">Rename</button>
+        </div>
+      </nav>
+    <div id="listBody"></div>
+  </div>
+  <div id = "todoPage">
     <nav>
-      <div id="navBar">
-        <button id="newListButton">New List</button>
-        <button id="deleteList" disabled>Delete</button>
-        <button id="selectListButton">Select</button>
-        <button id="renameListButton">Rename</button>
+      <div id="navBarTask">
+        <button id = "backToList">Back</button>
+        <button id = "deleteTask" disabled>Delete</button>
       </div>
     </nav>
-    <div id="listBody"></div>
     <div id="todoBody"></div>
+  </div>
     <script src="todo.js"></script>
   </body>
 </html>
