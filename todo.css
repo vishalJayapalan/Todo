@@ -23,6 +23,7 @@ body{
     float: right;
     /* margin-top: 90%; */
 }
+
 #deleteTask{
     float: right
 }
@@ -50,7 +51,8 @@ input{
     margin-left: 30%;
 }
 .taskDiv p{
-    display:inline
+    display:inline;
+    background:grey
 }
 .taskDiv input{
     display: inline;

@@ -28,7 +28,6 @@ let todoCount = 0;
 if (list.length) listFromLocalStorage(list);
 
 function listFromLocalStorage(list) {
-  console.log(list);
   for (let i of list) {
     let cnt = JSON.parse(localStorage.getItem(`${i}`));
     const res = document.createElement("p");
@@ -56,7 +55,16 @@ function pSelectorList(){
     });
     i.addEventListener("contextmenu", event => event.preventDefault());
     i.addEventListener("dblclick", renameList);
+    
   }
+}
+
+function listCreateInput(){
+  let todo = document.createElement("input");
+  todo.type = "text";
+  todo.placeholder = "newList....";
+  todo.required = "true";
+  todoBody.appendChild(todo);
 }
 
 function listCreator() {
@@ -79,6 +87,8 @@ function listCreator() {
 }
 
 function renameList(event) {
+
+
   const id = event.target.id;
   const renameName = document.getElementById(`${id}`);
   const lName = prompt("Enter the List Name");
@@ -125,21 +135,24 @@ function taskCreator(event) {
   taskFromLocalStorage(event);
   todo.addEventListener("keydown", event => {
     if (event.target.value && event.keyCode == "13") addTask(event, id);
+    // if (event.target.value && event.keyCode == "13") addTask2(event, id);
   });
 }
 
 function taskFromLocalStorage(event) {
-  event.target.style.background = "grey"
+  // event.target.style.background = "grey"
   let listId = event.target.id;
   let taskList = JSON.parse(localStorage.getItem(`${listId}`));
   let lTodos = taskList.todos;
-  todoCount = lTodos?lTodos.length:0
+  todoCount=0
   if (lTodos) {
     for (let i of lTodos) {
       let task = document.createElement("p");
       task.innerText = `${i.tName}`;
       task.id = `${i.tId}`; 
       todoBody.appendChild(task);
+      todoCount = `${i.tId}`
+      todoCount = Number(todoCount.slice(1))
     }
   }
   pSelectorTask()
@@ -150,9 +163,11 @@ function addTask(event, listId) {
   task.innerText = `${event.target.value}`;
   let taskName = event.target.value;
   event.target.value = "";
+  // console.log(todoCount)
   todoCount++;
+  // console.log(todoCount)
   task.id = `${listId}${todoCount}`;
-  task.class = "tasks";
+  task.className = "tasks";
   todoBody.appendChild(task);
   let list = JSON.parse(localStorage.getItem(`${listId}`));
   list["todos"].push({ tId: task.id, tName: `${taskName}` , priority: 'none' , date:'No Date Set',notes:"" });
@@ -161,12 +176,20 @@ function addTask(event, listId) {
 }
 
 function addTask2(event,listId){
+  console.dir(event.target)
   let div =document.createElement("div")
   div.className = "taskDiv"
+
+  // div.innerText = `${event.target.value}`;
+  let taskName = event.target.value;   //required for updatiing in localStorage
+  // event.target.value = "";
+  todoCount++;
+  div.id = `${listId}${todoCount}`;
+
   let checkbox = document.createElement("input")
   checkbox.type = "checkbox"
   let p = document.createElement("p")
-  p.innerText = `${event.target.value}`
+  p.innerText = event.target.value
   let date = document.createElement("input")
   date.type = "date"
   let priority = document.createElement("select")
@@ -178,8 +201,13 @@ function addTask2(event,listId){
   medium.value=medium
   div.appendChild(checkbox)
   div.appendChild(p)
+  div.appendChild(priority)
   div.appendChild(date)
   todoBody.appendChild(div)
+  // let list = JSON.parse(localStorage.getItem(`${listId}`));
+  // list["todos"].push({ tId: task.id, tName: `${taskName}` , priority: 'none' , date:'No Date Set',notes:"" });
+  // localStorage.setItem(`${listId}`, JSON.stringify(list));
+  // pSelectorTask()
 }
 
 back.addEventListener("click", backToListPage);
@@ -216,7 +244,6 @@ function pSelectorTask(){
 }
 
 function renameTask(event){
-  console.log("PATIENCE REQUIRED!!!!!! working on renaming the task")
   const taskId = event.target.id;
   const listId = event.target.id.slice(0,1)
   const renameName = document.getElementById(`${taskId}`);
@@ -239,7 +266,9 @@ function renameTask(event){
 
 // task input comming how mant times lists created before reloading
 // include fafa
+// taskId count problems
 // priority
 // addTask2 
 
 // task div > <input checkbox> <p> <select (priority)>  <date>
+// declare list globally and edit it
