@@ -13,15 +13,9 @@ body{
 #todoBody{
     margin-top:20px
 }
-/* button{
-    background-color:#0505059f;
-    color:white;
-} */
 
 #deleteList{
-    /* display:none; */
     float: right;
-    /* margin-top: 90%; */
 }
 
 #deleteTask{
@@ -46,17 +40,26 @@ p{
 #todoPage{
     display:none
 }
-input{
-    width: 40%;
+/* input{
+    width: 50%;
     margin-left: 30%;
-}
+} */
 .taskDiv p{
     display:inline;
+    margin-left:0%;
+    position: relative;
     background:grey
 }
 .taskDiv input{
+    position: relative;
     display: inline;
+    background: grey;
 }
 .taskDiv select{
+    position: relative;
     display: inline;
+    background: grey;
+}
+label{
+    background: grey;
 }
