@@ -25,9 +25,20 @@ let todoCount = 0;
 
 if (list.length) listFromLocalStorage(list);
 
+function elt(type, props, ...children) {
+  let dom = document.createElement(type);
+  if (props) Object.assign(dom, props);
+  for (let child of children) {
+    if (typeof child != "string") dom.appendChild(child);
+    else dom.appendChild(document.createTextNode(child));
+  }
+  return dom;
+}
+
 function listFromLocalStorage(list) {
   for (let i of list) {
     let cnt = JSON.parse(localStorage.getItem(`${i}`));
+    elt("p",{id:i,class:"list",})
     const res = document.createElement("p");
     res.id = i;
     res.class = "lists";
@@ -111,10 +122,6 @@ function listDelete() {
 function openList(event) {
   listPage.style = "display:none";
   todoPage.style = "display:block";
-  // while (todoBody.firstChild) {
-  //   todoBody.removeChild(todoBody.firstChild);
-  // }
-  // todoBody.innerHTML = "";
   todoBody.textContent=""
   taskCreator(event);
 }
@@ -133,23 +140,23 @@ function taskCreator(event) {
   });
 }
 
-function taskFromLocalStorage(event) {
-  let listId = event.target.id;
-  let taskList = JSON.parse(localStorage.getItem(`${listId}`));
-  let lTodos = taskList.todos;
-  todoCount = 0;
-  if (lTodos) {
-    for (let i of lTodos) {
-      let task = document.createElement("p");
-      task.innerText = `${i.tName}`;
-      task.id = `${i.tId}`;
-      todoBody.appendChild(task);
-      todoCount = `${i.tId}`;
-      todoCount = Number(todoCount.slice(1));
-    }
-  }
-  pSelectorTask();
-}
+// function taskFromLocalStorage(event) {
+//   let listId = event.target.id;
+//   let taskList = JSON.parse(localStorage.getItem(`${listId}`));
+//   let lTodos = taskList.todos;
+//   todoCount = 0;
+//   if (lTodos) {
+//     for (let i of lTodos) {
+//       let task = document.createElement("p");
+//       task.innerText = `${i.tName}`;
+//       task.id = `${i.tId}`;
+//       todoBody.appendChild(task);
+//       todoCount = `${i.tId}`;
+//       todoCount = Number(todoCount.slice(1));
+//     }
+//   }
+//   pSelectorTask();
+// }
 
 function taskFromLocalStorage2(event) {
   let listId = event.target.id;
@@ -312,8 +319,6 @@ function pSelectorTask() {
 
 function renameTask(event) {
   const taskId = event.target.parentNode.id
-  console.log(event.target.className)
-  // console.log(taskId,"test")
   const listId = event.target.id.slice(0, 1);
   const renameName = document.getElementById(`${taskId}`);
   const lName = prompt("Enter the Task Name");
@@ -331,7 +336,10 @@ function renameTask(event) {
   }
 }
 
-function updateTask(event) {}
+function updateTask(event) {
+  const taskId = event.target.parnentNode.id
+  const listId = taskId.slice(0,1) //taskId type check
+}
 
 // include fafa
 // addTask2
@@ -360,3 +368,10 @@ function updateTask(event) {}
 
 // perfection :-
 // taking taskId from localStorage
+
+// pSelectorTask
+// updating the tasks
+// loading the tasks from the localStorage on updateted task
+// sorting based on the date and priority
+// nav bar - list , today ,  scheduled 
+// add notes 
