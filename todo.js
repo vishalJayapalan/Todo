@@ -11,10 +11,9 @@ const back = document.querySelector("#backToList");
 const deleteTaskButton = document.querySelector("#deleteTask");
 
 let deleteElement;
-let todoPreCreator;
 // localStorage.clear()
-newListButton.addEventListener("click", listCreator);
-deleteListButton.addEventListener("click", listDelete);
+newListButton.addEventListener("click", createList);
+deleteListButton.addEventListener("click", deleteList);
 
 deleteTaskButton.addEventListener("click", deleteTask);
 
@@ -37,12 +36,8 @@ function elt(type, props, ...children) {
 
 function listFromLocalStorage(list) {
   for (let i of list) {
-    let cnt = JSON.parse(localStorage.getItem(`${i}`));
-    elt("p",{id:i,class:"list",})
-    const res = document.createElement("p");
-    res.id = i;
-    res.class = "lists";
-    res.textContent = cnt.name;
+    const cnt = JSON.parse(localStorage.getItem(`${i}`));
+    let res = elt("p", { id: i, className: "list", textContent: cnt.name });
     listBody.appendChild(res);
   }
   pSelectorList();
@@ -54,7 +49,7 @@ function pSelectorList() {
     i.addEventListener("mousedown", event => {
       event.preventDefault();
       if (event.button == 0) {
-        deleteListClick(event);
+        deleteListButtonEnabler(event);
       } else if (event.button == 2) {
         event.preventDefault();
         renameList(event);
@@ -65,22 +60,24 @@ function pSelectorList() {
   }
 }
 
-function listCreateInput() {
-  let todo = document.createElement("input");
-  todo.type = "text";
-  todo.placeholder = "newList....";
-  todo.required = "true";
-  todoBody.appendChild(todo);
-}
+// function listCreateInput() {
+//   const todo = elt("input",{type : "text",placeholder : "newList....",required:"true"})
+//   // let todo = document.createElement("input");
+//   // todo.type = "text";
+//   // todo.placeholder = "newList....";
+//   // todo.required = "true";
+//   todoBody.appendChild(todo);
+// }
 
-function listCreator() {
+function createList() {
   const listName = prompt("Enter List name");
   if (listName) {
-    const res = document.createElement("p");
     count++;
-    res.id = count;
-    res.class = "lists";
-    res.textContent = listName;
+    const res = elt("p", {
+      id: count,
+      className: "list",
+      textContent: listName
+    });
     listBody.appendChild(res);
     list.push(res.id);
     localStorage.setItem(
@@ -104,12 +101,12 @@ function renameList(event) {
   }
 }
 
-function deleteListClick(event) {
+function deleteListButtonEnabler(event) {
   deleteListButton.disabled = false;
   deleteElement = event.target;
 }
 
-function listDelete() {
+function deleteList() {
   let element = document.getElementById(deleteElement.id);
   element.parentNode.removeChild(element);
   list = list.filter(a => a != deleteElement.id);
@@ -122,16 +119,18 @@ function listDelete() {
 function openList(event) {
   listPage.style = "display:none";
   todoPage.style = "display:block";
-  todoBody.textContent=""
-  taskCreator(event);
+  todoBody.textContent = "";
+  taskPageCreator(event);
 }
 
-function taskCreator(event) {
+function taskPageCreator(event) {
   const id = event.target.id;
-  let todo = document.createElement("input");
-  todo.type = "text";
-  todo.placeholder = "newTask....";
-  todo.required = "true";
+  const todo = elt("input", {
+    type: "text",
+    placeholder: "newTask....",
+    required: "true"
+  });
+  // const listName =
   todoBody.appendChild(todo);
   taskFromLocalStorage2(event);
   todo.addEventListener("keydown", event => {
@@ -165,109 +164,77 @@ function taskFromLocalStorage2(event) {
   todoCount = 0;
   if (lTodos) {
     for (let i of lTodos) {
-      let div = document.createElement("div");
-      let p = document.createElement("p");
-      div.id = `${i.tId}`;
-      div.className = "taskDiv";
-      p.innerText = `${i.tName}`;
-      let done = document.createElement("input");
-      done.type = "checkbox";
-      let date = document.createElement("input");
-      date.type = "date";
-      let priority = document.createElement("select");
-      let high = document.createElement("option");
-      let medium = document.createElement("option");
-      let low = document.createElement("option");
-      let none = document.createElement("option");
-      let label = document.createElement("label");
-      label.textContent = "     Priority:";
-      high.value = "high";
-      high.textContent = "High";
-      none.value = "none";
-      none.textContent = "None";
-      low.value = "low";
-      low.textContent = "Low";
-      medium.value = "medium";
-      medium.textContent = "Medium";
-      date.className = priority.className = p.className = label.className = done.className =
-      div.id;
-      div.appendChild(done);
-      div.appendChild(p);
-      div.appendChild(label);
-      priority.appendChild(none);
-      priority.appendChild(low);
-      priority.appendChild(medium);
-      priority.appendChild(high);
-      div.appendChild(priority);
-      div.appendChild(date);
+      const div = elt(
+        "div",
+        { id: i.tId, className: "taskDiv" },
+        elt("input", { type: "checkbox", className: "taskDiv" }),
+        elt("p", { innerText: i.tName, className: "taskDiv" }),
+        elt("label", { textContent: ` Priority`, className: "taskDiv" }),
+        elt(
+          "select",
+          { className: "taskDiv" },
+          elt("option", { value: 0, textContent: "None" }),
+          elt("option", { value: 1, textContent: "Low" }),
+          elt("option", { value: 2, textContent: "Medium" }),
+          elt("option", { value: 3, textContent: "High" })
+        ),
+        elt("input", { type: "date", value: `${i.date}`, className: "taskDiv" })
+      );
+      // date.className = priority.className = p.className = label.className = done.className = div.id;
       todoBody.appendChild(div);
       todoCount = `${i.tId}`;
       todoCount = Number(todoCount.slice(1));
+      div.addEventListener("click", deleteTaskButtonEnabler);
     }
   }
-  pSelectorTask();
+  // div.addEventListener("click",deleteTaskButtonEnabler)
+  // pSelectorTask();
+  // deleteTaskButtonEnabler()
 }
 
-function addTask(event, listId) {
-  let task = document.createElement("p");
-  task.innerText = `${event.target.value}`;
-  let taskName = event.target.value;
-  event.target.value = "";
-  todoCount++;
-  task.id = `${listId}${todoCount}`;
-  task.className = "tasks";
-  todoBody.appendChild(task);
-  let list = JSON.parse(localStorage.getItem(`${listId}`));
-  list["todos"].push({
-    tId: task.id,
-    tName: `${taskName}`,
-    priority: "none",
-    date: "No Date Set",
-    notes: ""
-  });
-  localStorage.setItem(`${listId}`, JSON.stringify(list));
-  pSelectorTask();
-}
+// function addTask(event, listId) {
+//   let task = document.createElement("p");
+//   task.innerText = `${event.target.value}`;
+//   let taskName = event.target.value;
+//   event.target.value = "";
+//   todoCount++;
+//   task.id = `${listId}${todoCount}`;
+//   task.className = "tasks";
+//   todoBody.appendChild(task);
+//   let list = JSON.parse(localStorage.getItem(`${listId}`));
+//   list["todos"].push({
+//     tId: task.id,
+//     tName: `${taskName}`,
+//     priority: "none",
+//     date: "No Date Set",
+//     notes: ""
+//   });
+//   localStorage.setItem(`${listId}`, JSON.stringify(list));
+//   pSelectorTask();
+// }
 
 function addTask2(event, listId) {
-  let div = document.createElement("div");
-  div.className = "taskDiv";
-  let taskName = event.target.value; //required for updating in localStorage
+  const taskName = event.target.value; //required for updating in localStorage
   event.target.value = "";
   todoCount++;
-  div.id = `${listId}${todoCount}`;
-  let done = document.createElement("input");
-  done.type = "checkbox";
-  let p = document.createElement("p");
-  p.innerText = taskName;
-  let date = document.createElement("input");
-  date.type = "date";
-  let priority = document.createElement("select");
-  let high = document.createElement("option");
-  let medium = document.createElement("option");
-  let low = document.createElement("option");
-  let none = document.createElement("option");
-  let label = document.createElement("label");
-  label.textContent = "     Priority:";
-  high.value = "high";
-  high.textContent = "High";
-  none.value = "none";
-  none.textContent = "None";
-  low.value = "low";
-  low.textContent = "Low";
-  medium.value = "medium";
-  medium.textContent = "Medium";
-  div.appendChild(done);
-  div.appendChild(p);
-  div.appendChild(label);
-  priority.appendChild(none);
-  priority.appendChild(low);
-  priority.appendChild(medium);
-  priority.appendChild(high);
-  div.appendChild(priority);
-  div.appendChild(date);
-  date.className = priority.className = p.className = label.className = done.className =
-    div.id;
+  const div = elt(
+    "div",
+    { id: `${listId}${todoCount}`, className: "taskDiv" },
+    elt("input", { type: "checkbox", className: "taskDiv" }),
+    elt("p", { innerText: taskName, className: "taskDiv" }),
+    elt("label", { textContent: ` Priority`, className: "taskDiv" }),
+    elt(
+      "select",
+      { className: "taskDiv" },
+      elt("option", { value: 0, textContent: "None" }),
+      elt("option", { value: 1, textContent: "Low" }),
+      elt("option", { value: 2, textContent: "Medium" }),
+      elt("option", { value: 3, textContent: "High" })
+    ),
+    elt("input", { type: "date", className: "taskDiv" })
+  );
+  // date.className = priority.className = p.className = label.className = done.className =
+  //   div.id;
   todoBody.appendChild(div);
   let list = JSON.parse(localStorage.getItem(`${listId}`));
   list["todos"].push({
@@ -279,6 +246,13 @@ function addTask2(event, listId) {
   });
   localStorage.setItem(`${listId}`, JSON.stringify(list));
   // pSelectorTask()
+  // deleteTaskButtonEnabler()
+  div.addEventListener("click", deleteTaskButtonEnabler);
+}
+
+function deleteTaskButtonEnabler() {
+  deleteTaskButton.disabled = false;
+  deleteElement = event.target;
 }
 
 back.addEventListener("click", backToListPage);
@@ -289,10 +263,10 @@ function backToListPage(event) {
   todoPage.style = "display:none";
 }
 
-function deleteTaskClick(event) {
-  deleteTaskButton.disabled = false;
-  deleteElement = event.target;
-}
+// function deleteTaskClick(event) {
+//   deleteTaskButton.disabled = false;
+//   deleteElement = event.target;
+// }
 
 function deleteTask() {
   let element = document.getElementById(deleteElement.id);
@@ -317,29 +291,29 @@ function pSelectorTask() {
   }
 }
 
-function renameTask(event) {
-  const taskId = event.target.parentNode.id
-  const listId = event.target.id.slice(0, 1);
-  const renameName = document.getElementById(`${taskId}`);
-  const lName = prompt("Enter the Task Name");
-  if (lName) {
-    renameName.textContent = lName;
-    let list = JSON.parse(localStorage.getItem(`${listId}`));
-    let task = list.todos.map(a => {
-      if (a.tId == taskId) {
-        a.tName = lName;
-      }
-      return a;
-    });
-    list.todos = task;
-    localStorage.setItem(`${listId}`, JSON.stringify(list));
-  }
-}
+// function renameTask(event) {
+//   const taskId = event.target.parentNode.id
+//   const listId = event.target.id.slice(0, 1);
+//   const renameName = document.getElementById(`${taskId}`);
+//   const lName = prompt("Enter the Task Name");
+//   if (lName) {
+//     renameName.textContent = lName;
+//     let list = JSON.parse(localStorage.getItem(`${listId}`));
+//     let task = list.todos.map(a => {
+//       if (a.tId == taskId) {
+//         a.tName = lName;
+//       }
+//       return a;
+//     });
+//     list.todos = task;
+//     localStorage.setItem(`${listId}`, JSON.stringify(list));
+//   }
+// }
 
-function updateTask(event) {
-  const taskId = event.target.parnentNode.id
-  const listId = taskId.slice(0,1) //taskId type check
-}
+// function updateTask(event) {
+//   const taskId = event.target.parnentNode.id
+//   const listId = taskId.slice(0,1) //taskId type check
+// }
 
 // include fafa
 // addTask2
@@ -365,13 +339,14 @@ function updateTask(event) {
 // update pSelectorTask()
 // insert notes Text Area
 
-
 // perfection :-
-// taking taskId from localStorage
+// taking taskId from localStorage(use | as seperator between taskid and listid)
 
 // pSelectorTask
 // updating the tasks
 // loading the tasks from the localStorage on updateted task
 // sorting based on the date and priority
-// nav bar - list , today ,  scheduled 
-// add notes 
+// nav bar - list , today ,  scheduled
+// add notes
+
+// use the parentid and create updating task and generating from localStorage
