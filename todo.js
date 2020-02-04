@@ -350,3 +350,5 @@ function pSelectorTask() {
 // add notes
 
 // use the parentid and create updating task and generating from localStorage
+// make changes to list structure
+// 
